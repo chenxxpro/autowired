@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<autowired>
+
+    <!--自动注入Bean列表-->
+    <bean id="BUILD.GRADLE"
+          class="java.io.File"
+          preload="true"
+    >
+        <init-params>
+            <param key="path">/home/yoojia/JavaProjects/autowired/build.gradle</param>
+        </init-params>
+    </bean>
+
+    <bean id="GRADLEW" factory="net.nextabc.demo.FileFactory">
+        <init-params>
+            <param key="path">/home/yoojia/JavaProjects/Autowrited/gradlew</param>
+        </init-params>
+    </bean>
+
+</autowired>
