@@ -5,9 +5,9 @@ import java.util.Map;
 
 /**
  * @author 陈哈哈 (yoojiachen@gmail.com)
- * @version 1.0.0
+ * @version 1.1.0
  */
-public class BeanConfig {
+public class XmlBeanConfig {
 
     final String id;
     final String beanClass;
@@ -15,7 +15,7 @@ public class BeanConfig {
     final String factoryClass;
     final boolean preload;
 
-    BeanConfig(String id, String beanClass, Map<String, String> initParams, String factoryClass, boolean preload) {
+    XmlBeanConfig(String id, String beanClass, Map<String, String> initParams, String factoryClass, boolean preload) {
         this.id = id;
         this.beanClass = beanClass;
         this.initParams = Collections.unmodifiableMap(initParams);
@@ -25,7 +25,7 @@ public class BeanConfig {
 
     @Override
     public String toString() {
-        return "BeanConfig{" +
+        return "XmlBeanConfig{" +
                 "id='" + id + '\'' +
                 ", beanClass=" + beanClass +
                 ", initParams=" + initParams +

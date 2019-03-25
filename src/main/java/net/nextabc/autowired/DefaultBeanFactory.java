@@ -47,27 +47,27 @@ public final class DefaultBeanFactory implements BeanFactory {
                 return strC.newInstance(value);
             }
             // Int
-            final Constructor<?> intC = getConstructorOrType(beanType, int.class, Integer.class);
+            final Constructor<?> intC = getConstructorByEachType(beanType, int.class, Integer.class);
             if (intC != null) {
                 return intC.newInstance(Integer.parseInt(value));
             }
             // Long
-            final Constructor<?> longC = getConstructorOrType(beanType, long.class, Long.class);
+            final Constructor<?> longC = getConstructorByEachType(beanType, long.class, Long.class);
             if (longC != null) {
                 return longC.newInstance(Long.parseLong(value));
             }
             // Float
-            final Constructor<?> floatC = getConstructorOrType(beanType, float.class, Float.class);
+            final Constructor<?> floatC = getConstructorByEachType(beanType, float.class, Float.class);
             if (floatC != null) {
                 return floatC.newInstance(Float.parseFloat(value));
             }
             // Double
-            final Constructor<?> doubleC = getConstructorOrType(beanType, double.class, Double.class);
+            final Constructor<?> doubleC = getConstructorByEachType(beanType, double.class, Double.class);
             if (doubleC != null) {
                 return doubleC.newInstance(Double.parseDouble(value));
             }
             // Boolean
-            final Constructor<?> boolC = getConstructorOrType(beanType, boolean.class, Boolean.class);
+            final Constructor<?> boolC = getConstructorByEachType(beanType, boolean.class, Boolean.class);
             if (boolC != null) {
                 return boolC.newInstance(Boolean.parseBoolean(value));
             }
@@ -89,7 +89,7 @@ public final class DefaultBeanFactory implements BeanFactory {
         }
     }
 
-    private Constructor<?> getConstructorOrType(Class<?> host, Class<?>... toTryTypes) {
+    private Constructor<?> getConstructorByEachType(Class<?> host, Class<?>... toTryTypes) {
         for (Class<?> type : toTryTypes) {
             final Constructor<?> c = getConstructor(host, type);
             if (c != null) {

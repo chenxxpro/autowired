@@ -26,6 +26,14 @@ class BeanField {
         return supplier.get();
     }
 
+    void releaseValue() {
+        supplier.ifPresent(value -> {
+            if (value instanceof AutoBean) {
+                ((AutoBean) value).onBeanDestroy();
+            }
+        });
+    }
+
     private Object createInstance() {
         try {
             return factory.create(nullableBeanType, initParams);

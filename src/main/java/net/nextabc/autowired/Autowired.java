@@ -7,7 +7,8 @@ package net.nextabc.autowired;
 public final class Autowired<T> {
 
     static {
-        AutoManager.init();
+        AutoManager.initialize();
+        Runtime.getRuntime().addShutdownHook(new Thread(AutoManager::release));
     }
 
     private final String beanId;

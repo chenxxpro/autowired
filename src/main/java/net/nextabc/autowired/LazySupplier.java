@@ -1,5 +1,6 @@
 package net.nextabc.autowired;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -22,9 +23,18 @@ public class LazySupplier<T> implements Supplier<T> {
             synchronized (this) {
                 if (value == null) {
                     value = this.supplier.get();
+                    if (value instanceof AutoBean) {
+                        ((AutoBean) value).onBeanCreated();
+                    }
                 }
             }
         }
         return value;
+    }
+
+    public void ifPresent(Consumer<T> consumer) {
+        if (value != null) {
+            consumer.accept(value);
+        }
     }
 }

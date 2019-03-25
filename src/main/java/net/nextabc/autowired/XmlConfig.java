@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * XML配置文件工具类
+ *
  * @author 陈哈哈 (yoojiachen@gmail.com)
  * @version 1.0.0
  */
@@ -65,10 +67,15 @@ class XmlConfig {
         return Clazz.CLASS_LOADER.getResourceAsStream(XML_CONFIG_NAME);
     }
 
-    List<BeanConfig> getBeans() {
-        final List<BeanConfig> output = new ArrayList<>();
+    /**
+     * 获取Bean配置列表
+     *
+     * @return List
+     */
+    List<XmlBeanConfig> getXmlBeanConfigs() {
+        final List<XmlBeanConfig> output = new ArrayList<>();
         final String defaultBeanFactoryClass = DefaultBeanFactory.class.getName();
-        getElementList(docElement, "bean").forEach(beanEle -> {
+        getXmlElementList(docElement, "bean").forEach(beanEle -> {
             final String identify = beanEle.getAttribute("id");
 
             String factoryClass = beanEle.getAttribute("factory");
@@ -85,8 +92,8 @@ class XmlConfig {
             }
             // 初始化参数
             final Map<String, String> initParams = new HashMap<>(4);
-            getElementList(beanEle, "init-params").forEach(initParamEle -> {
-                getElementList(initParamEle, "param").forEach(param -> {
+            getXmlElementList(beanEle, "init-params").forEach(initParamEle -> {
+                getXmlElementList(initParamEle, "param").forEach(param -> {
                     initParams.put(param.getAttribute("key"), param.getTextContent());
                 });
             });
@@ -94,7 +101,7 @@ class XmlConfig {
             final String preload = beanEle.getAttribute("preload");
             // 确保非空
             // 默认BeanFactory
-            output.add(new BeanConfig(
+            output.add(new XmlBeanConfig(
                     identify,
                     beanClass,
                     initParams,
@@ -104,8 +111,7 @@ class XmlConfig {
         return output;
     }
 
-
-    private List<Element> getElementList(Element parent, String tag) {
+    private List<Element> getXmlElementList(Element parent, String tag) {
         final NodeList nodes = parent.getElementsByTagName(tag);
         final List<Element> list = new ArrayList<>(nodes.getLength());
         for (int i = 0; i < nodes.getLength(); i++) {
