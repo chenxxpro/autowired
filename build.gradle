@@ -43,8 +43,8 @@ ext {
     projectVersion = project.version
     projectName = rootProject.name
     projectDesc = description
-    projectURL = "https://github.com/yoojia/Aurowired"
-    projectVCS = "https://github.com/yoojia/Aurowired.git"
+    projectURL = "https://github.com/yoojia/Autowired"
+    projectVCS = "https://github.com/yoojia/Autowired.git"
 }
 
 tasks.withType(JavaCompile) {
