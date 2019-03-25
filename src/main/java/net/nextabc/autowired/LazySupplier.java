@@ -1,6 +1,5 @@
 package net.nextabc.autowired;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 /**
@@ -11,8 +10,7 @@ public class LazySupplier<T> implements Supplier<T> {
 
     private final Supplier<T> supplier;
 
-    private final AtomicBoolean ready = new AtomicBoolean(false);
-    private T value;
+    private volatile T value;
 
     public LazySupplier(Supplier<T> supplier) {
         this.supplier = supplier;
@@ -20,8 +18,12 @@ public class LazySupplier<T> implements Supplier<T> {
 
     @Override
     public T get() {
-        if (!ready.getAndSet(true)) {
-            value = this.supplier.get();
+        if (value == null) {
+            synchronized (this) {
+                if (value == null) {
+                    value = this.supplier.get();
+                }
+            }
         }
         return value;
     }
