@@ -173,6 +173,14 @@ Autowired在调用getBean来获取Bean对象时,内部基于`beanId`来获取.
 2. 如果参数只有一个，尝试String/Integer/Long/Float/Double/Boolean等基本类型的构造器并解析参数来创建；
 4. 如果参数有多个，暂不支持；
 
+#### autowired.xml的文件位置
+
+按以下顺序搜索`autowired.xml`文件:
+
+1. `System.getProperty("autowired.configPath")` 指定的文件地址；
+1. `System.getProperty("user.dir")` 目录下的配置文件；
+1. `classpath:autowired.xml` Classpath路径下的配置文件；
+
 ## Q&A
 
 **Q: 如果要创建相同class类型,不同参数的Bean怎么办?**

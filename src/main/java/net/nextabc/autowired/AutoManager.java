@@ -12,8 +12,6 @@ import java.util.Map;
  */
 class AutoManager {
 
-    private static final String XML_CONFIG = "autowired.xml";
-
     private static final Logger LOGGER = Logger.getLogger(AutoManager.class);
 
     private static final Map<String, BeanField> IDENTIFY_REGISTER = new HashMap<>();
@@ -22,7 +20,7 @@ class AutoManager {
     }
 
     static void init() {
-        final XMLConfig xml = new XMLConfig(XML_CONFIG);
+        final XmlConfig xml = new XmlConfig();
         // 从配置文件中加载
         final Map<String, BeanFactory> factories = new HashMap<>(10);
         xml.getBeans().forEach(cfg -> {
