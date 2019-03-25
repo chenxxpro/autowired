@@ -22,7 +22,7 @@ repositories {
 
 
 group 'net.nextabc'
-version '1.0.3'
+version '1.0.4'
 description = 'A lightweight @Aurowired like library'
 
 
