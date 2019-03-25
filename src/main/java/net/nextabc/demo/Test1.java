@@ -10,10 +10,10 @@ import java.io.File;
  */
 public class Test1 {
 
-    private static final Autowired gradlew = Autowired.identify("GRADLEW");
+    private static final Autowired<File> gradlew = Autowired.identify("GRADLEW");
 
     public void test() {
-        File f = gradlew.get();
+        File f = gradlew.getBean();
         System.out.println(f.getAbsolutePath());
     }
 

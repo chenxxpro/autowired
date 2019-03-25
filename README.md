@@ -9,8 +9,9 @@ Autowired的使用场景是常驻内存的服务性质的类注入管理，例�
 
 它提供以下特性：
 
-1. 与Sprint.@Autowired 注解类似的功能：使用配置文件来声明Bean，并在需要的地方自动加载；
-1. 默认Lazy懒加载；可配置预加载； 
+1. 与Spring.@Autowired注解类似的功能：使用配置文件来声明Bean，并在需要的地方自动加载；
+1. 与Spring.@Autowired不同的是,Autowired并非IOC反射注入,而是LazyLoad懒加载；
+1. 当然,默认情况下是Lazy,也可配置为初始化时预加载； 
 
 ## Why
 
@@ -73,7 +74,7 @@ Maven
 引入依赖：
 
 ```groovy
-compile 'net.nextabc:autowired:1.0.0'
+compile 'net.nextabc:autowired:1.0.1'
 ```
 
 Maven
@@ -81,7 +82,7 @@ Maven
 <dependency>
   <groupId>net.nextabc</groupId>
   <artifactId>autowired</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <type>pom</type>
 </dependency>
 ```
@@ -95,7 +96,8 @@ Maven
 <autowired>
 
     <!--自动注入Bean列表-->
-    <bean id="YOUR_IDENTIFY"
+    <bean id="YOUR_id"
+          class="java.io.File"
           factory="net.nextabc.demo.FileFactory"
           preload="true"
     >
@@ -113,46 +115,70 @@ Maven
 ```java
 public class Test1 {
 
-    private static final Autowired myAutowired = Autowired.identify("YOUR_IDENTIFY");
+    private static final Autowired<File> myAutowired = Autowired.id("YOUR_id");
 
     public void test() {
-        // 使用myAutowired成员变量的get方法，可以获取 “YOUR_IDENTIFY” 配置的Bean对象。
+        // 使用myAutowired成员变量的get方法，可以获取 “YOUR_id” 配置的Bean对象。
         File f = myAutowired.get();
         System.out.println(f.getAbsolutePath());
     }
 }
 ```
 
-如上代码，创建一个Autowired成员变量，可以static/final，调用Autowired.get()函数获取对应的Bean对象。这个对象是由BeanFactory创建的。
+如上代码，创建一个Autowired成员变量，修饰可以static也可以final，调用Autowired.getBean()函数获取对应的Bean对象。这个对象是由BeanFactory创建的。
 
-Bean对象一旦被创建，会留驻内存，重复调用同一个identify的Bean只会被创建一次。
+Bean对象一旦被创建，会留驻内存，重复调用同一个id的Bean,其Bean对象只会被创建一次,之后的调用将直接使用缓存对象。
+
+## GetBean
+
+Autowired提供了两个创建方法函数:
+
+1. `Autowired.id(String)` 明确指定id,创建与xml配置bean.id一致的Bean绑定；
+1. `Autowired.type(Class)` 以Class.name作为id；
+
+Autowired在调用getBean来获取Bean对象时,内部基于`beanId`来获取.
+ 
+通常情况,每个Class类型创建一个Bean对象,并建议使用id属性作为beanId. Autowired优先使用为xml配置的bean.id属性；如果没有设置,则使用class类型名称作为beanId.
+
+但是需要注意,无论使用id,还是class名称作为beanId,他们都必须保持唯一性,否则Autowired在初始化时会报错的.
 
 ## 配置参数说明
 
 #### Bean的属性说明
 
-- `id` Bean的Identify。它与类成员变量声明时指定的Identify是一一对应的；
-- `class` Bean的类名称；
-- `factofy` 创建Bean的Factory工厂类。
-- `preload` 默认情况下，每个Bean都是Lazy Load；即当第一次调用时才会创建，并留驻内存；
+- `id` Bean的id；它与类成员变量声明时`Autowired.id(String)`指定的id是一一对应的；
+- `class` Bean的类名称；它与类成员变量声明时`Autowired.type(Class)`指定的类名是一一对应的；
+- `factofy` 创建Bean的Factory工厂类。class与factory两项配置至少指定一项目；优先使用factory创建Bean对象；
+- `preload` 默认情况为false，即每个Bean都是Lazy Load,即当第一次调用时才会创建，并留驻内存；如果为true则在Autowired初始化时自动创建Bean对象.
 
 #### class/factory的说明
 
-`class`和`factory`都是创建Bean对象的关键类，两个参数不能同时为空。这两个参数的逻辑是这样的：
+`class`和`factory`都是创建Bean对象的关键类，两个参数不能同时为空。
 
+这两个参数的逻辑是这样的：
+
+重点:
 1. class/factory同时设置时，factory会接收到class的非空Class<?>对象和initArgs参数来创建；
-1. 只有factory，未设置class时，可以使用factory创建，其中Class<?>对象为空。意味着factory对于自己要创建的Bean是已知的；
-1. 只有class，未设置factory时，使用默认DefaultBeanFactory来创建。
+
+扩展:
+1. 只有factory，未设置class时: 使用factory创建，但其中Class<?>参数对象为空。这意味着factory对于自己要创建的Bean是全知的；
+1. 只有class，未设置factory时: 使用默认DefaultBeanFactory来创建。DefaultBeanFactory创建对象的逻辑另有说明；
 
 #### DefaultBeanFactory
 
-默认BeanFactory工厂类，可以创建简单类型的Bean对象，它内部创建Bean对象策略如下：
+默认创建Bean工厂类，可以创建简单类型的Bean对象，它内部创建Bean对象策略如下：
 
 1. 如果参数为空，直接使用newInstance创建；
 3. 如果参数只有一个，并且是Map类型，直接将Map参数传入构造器；
-2. 如果参数只有一个，尝试String/int/Integer/long/Long/float/Float/double/Double/boolean/Boolean等基本类型的构造器并解析参数来创建；
+2. 如果参数只有一个，尝试String/Integer/Long/Float/Double/Boolean等基本类型的构造器并解析参数来创建；
 4. 如果参数有多个，暂不支持；
 
-Q: **为什么不支持多个参数呢？**
+## Q&A
+
+**Q: 如果要创建相同class类型,不同参数的Bean怎么办?**
+
+>A: 使用不同的Id来区分即可；
+
+**Q: DefaultBeanFactory为什么不支持多个参数呢？**
 
 > A: 多个参数的类构造函数，已经很复杂，这种情况下花费大量自动化逻辑来自动构造是不划算的。

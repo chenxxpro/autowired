@@ -30,7 +30,7 @@ class BeanField {
         try {
             return factory.create(nullableBeanType, initParams);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create object from factory, identify: " + identify, e);
+            throw new RuntimeException("Failed to create object from factory, id: " + identify, e);
         }
     }
 }

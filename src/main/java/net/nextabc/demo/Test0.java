@@ -10,10 +10,10 @@ import java.io.File;
  */
 public class Test0 {
 
-    private final Autowired file = Autowired.identify("BUILD.GRADLE");
+    private final Autowired<File> file = Autowired.identify("BUILD.GRADLE");
 
     public void test() {
-        File f = file.get();
+        File f = file.getBean();
         System.out.println(f.getAbsolutePath());
     }
 

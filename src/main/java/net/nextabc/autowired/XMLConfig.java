@@ -44,9 +44,6 @@ class XMLConfig {
         final String defaultBeanFactoryClass = DefaultBeanFactory.class.getName();
         getElementList(docElement, "bean").forEach(beanEle -> {
             final String identify = beanEle.getAttribute("id");
-            if (isEmpty(identify)) {
-                throw new IllegalArgumentException("Bean.id must not be empty");
-            }
 
             String factoryClass = beanEle.getAttribute("factory");
             final String beanClass = beanEle.getAttribute("class");
@@ -61,10 +58,10 @@ class XMLConfig {
                 factoryClass = defaultBeanFactoryClass;
             }
             // 初始化参数
-            final Map<String, String> initArgs = new HashMap<>();
+            final Map<String, String> initParams = new HashMap<>(4);
             getElementList(beanEle, "init-params").forEach(initParamEle -> {
                 getElementList(initParamEle, "param").forEach(param -> {
-                    initArgs.put(param.getAttribute("key"), param.getTextContent());
+                    initParams.put(param.getAttribute("key"), param.getTextContent());
                 });
             });
 
@@ -74,7 +71,7 @@ class XMLConfig {
             output.add(new BeanConfig(
                     identify,
                     beanClass,
-                    initArgs,
+                    initParams,
                     factoryClass,
                     "true".equalsIgnoreCase(preload)));
         });

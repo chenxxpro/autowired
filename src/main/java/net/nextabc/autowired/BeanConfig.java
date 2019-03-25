@@ -9,14 +9,14 @@ import java.util.Map;
  */
 public class BeanConfig {
 
-    final String identify;
+    final String id;
     final String beanClass;
     final Map<String, String> initParams;
     final String factoryClass;
     final boolean preload;
 
-    BeanConfig(String identify, String beanClass, Map<String, String> initParams, String factoryClass, boolean preload) {
-        this.identify = identify;
+    BeanConfig(String id, String beanClass, Map<String, String> initParams, String factoryClass, boolean preload) {
+        this.id = id;
         this.beanClass = beanClass;
         this.initParams = Collections.unmodifiableMap(initParams);
         this.factoryClass = factoryClass;
@@ -26,7 +26,7 @@ public class BeanConfig {
     @Override
     public String toString() {
         return "BeanConfig{" +
-                "identify='" + identify + '\'' +
+                "id='" + id + '\'' +
                 ", beanClass=" + beanClass +
                 ", initParams=" + initParams +
                 ", factoryClass=" + factoryClass +
