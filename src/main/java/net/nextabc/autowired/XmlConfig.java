@@ -1,22 +1,19 @@
 package net.nextabc.autowired;
 
-import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.System.getProperty;
 
 /**
  * XML配置文件工具类
@@ -26,18 +23,21 @@ import java.util.Map;
  */
 class XmlConfig {
 
-    private static final Logger LOGGER = Logger.getLogger(XmlConfig.class);
-
     private static final String XML_CONFIG_NAME = "autowired.xml";
 
     private final Element docElement;
 
     XmlConfig() {
         // 加载配置文件的路径顺序:
-        // 1. System.getProperty("autowired.config")
+        // 1. System.getProperty("autowired.configPath")
         // 2. System.getProperty("user.dir")
         // 3. Classpath.resource
-        try (final InputStream is = loadConfig()) {
+        final Resource res = Resource.from(
+                Resource.File(getProperty("autowired.configPath")),
+                Resource.File(Paths.get(getProperty("user.dir"), XML_CONFIG_NAME).toFile()),
+                Resource.Classpath(XML_CONFIG_NAME)
+        );
+        try (final InputStream is = res.getOrNull()) {
             if (is == null) {
                 throw new IllegalStateException("Resource not found: " + XML_CONFIG_NAME);
             }
@@ -49,22 +49,6 @@ class XmlConfig {
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse config: " + XML_CONFIG_NAME);
         }
-    }
-
-    private InputStream loadConfig() throws FileNotFoundException {
-        final String property = System.getProperty("autowired.config", "");
-        if (!property.isEmpty()) {
-            final Path path = Paths.get(property, XML_CONFIG_NAME);
-            LOGGER.info("Using config[1]: " + path.toString());
-            return new FileInputStream(path.toFile());
-        }
-        final File userDirConfig = Paths.get(System.getProperty("user.dir"), XML_CONFIG_NAME).toFile();
-        if (userDirConfig.exists()) {
-            LOGGER.info("Using config[2]: " + userDirConfig.toString());
-            return new FileInputStream(userDirConfig);
-        }
-        LOGGER.info("Using config[3]: classpath:" + XML_CONFIG_NAME);
-        return Clazz.CLASS_LOADER.getResourceAsStream(XML_CONFIG_NAME);
     }
 
     /**
