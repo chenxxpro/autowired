@@ -31,7 +31,7 @@ public class Resource {
     public InputStream getOrNull() {
         for (Provider provider : providers) {
             try {
-                InputStream is = provider.get();
+                final InputStream is = provider.get();
                 if (is != null) {
                     return is;
                 }
@@ -47,14 +47,14 @@ public class Resource {
     }
 
     public static Provider File(String path) {
-        return File(new File(path));
+        return File(null == path ? null : new File(path));
     }
 
     public static Provider File(File file) {
         return new FileProvider(file);
     }
 
-    public static Provider Classpath(String resource){
+    public static Provider Classpath(String resource) {
         return new ClasspathProvider(resource);
     }
 
@@ -62,19 +62,19 @@ public class Resource {
 
     public static class FileProvider implements Provider {
 
-        private final java.io.File file;
+        private final File file;
 
         public FileProvider(String path) {
-            this(new java.io.File(path));
+            this(null == path ? null : new File(path));
         }
 
-        public FileProvider(java.io.File file) {
+        public FileProvider(File file) {
             this.file = file;
         }
 
         @Override
         public InputStream get() throws Exception {
-            if (file.isFile() && file.exists()) {
+            if (null != file && file.isFile() && file.exists()) {
                 return new FileInputStream(file);
             } else {
                 return null;
