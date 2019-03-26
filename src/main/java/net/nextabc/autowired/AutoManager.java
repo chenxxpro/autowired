@@ -4,7 +4,9 @@ package net.nextabc.autowired;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -84,6 +86,7 @@ class AutoManager {
     }
 
     static void release() {
-        REGISTER.keySet().forEach(key -> REGISTER.remove(key).releaseValue());
+        final Set<String> keys = new HashSet<>(REGISTER.keySet());
+        keys.forEach(key -> REGISTER.remove(key).releaseValue());
     }
 }
