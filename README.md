@@ -74,7 +74,7 @@ Maven
 引入依赖：
 
 ```groovy
-compile 'net.nextabc:autowired:1.1.0'
+compile 'net.nextabc:autowired:1.1.2'
 ```
 
 Maven
@@ -82,7 +82,7 @@ Maven
 <dependency>
   <groupId>net.nextabc</groupId>
   <artifactId>autowired</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.2</version>
   <type>pom</type>
 </dependency>
 ```
