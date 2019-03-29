@@ -78,7 +78,13 @@ class XmlConfig {
             final Map<String, String> initParams = new HashMap<>(4);
             getXmlElementList(beanEle, "init-params").forEach(initParamEle -> {
                 getXmlElementList(initParamEle, "param").forEach(param -> {
-                    initParams.put(param.getAttribute("key"), param.getTextContent());
+                    // 优先读取环境变量
+                    final String envKey = param.getAttribute("envKey");
+                    if (envKey != null && !envKey.isEmpty()) {
+                        initParams.put(envKey, System.getenv(envKey));
+                    } else {
+                        initParams.put(param.getAttribute("key"), param.getTextContent());
+                    }
                 });
             });
 

@@ -7,13 +7,13 @@
           preload="true"
     >
         <init-params>
-            <param key="path">/home/yoojia/JavaProjects/autowired/build.gradle</param>
+            <param key="path" envKey="AUTOWIRED_BUILD_GRADLE_PATH">/home/yoojia/JavaProjects/autowired/build.gradle</param>
         </init-params>
     </bean>
 
     <bean id="GRADLEW" factory="net.nextabc.demo.FileFactory">
         <init-params>
-            <param key="path">/home/yoojia/JavaProjects/Autowrited/gradlew</param>
+            <param key="path" envKey="AUTOWIRED_GRADLEW_PATH">/home/yoojia/JavaProjects/Autowrited/gradlew</param>
         </init-params>
     </bean>
 
