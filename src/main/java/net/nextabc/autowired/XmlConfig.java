@@ -82,13 +82,14 @@ class XmlConfig {
             getXmlElementList(beanEle, "init-params").forEach(initParamEle -> {
                 getXmlElementList(initParamEle, "param").forEach(param -> {
                     final String key = param.getAttribute("key");
-                    final String value;
+                    String value = param.getTextContent();
                     // 优先读取环境变量的值,来替换配置文件的值
                     final String envKey = param.getAttribute("envKey");
                     if (envKey != null && !envKey.isEmpty()) {
-                        value = System.getenv(envKey);
-                    } else {
-                        value = param.getTextContent();
+                        final String envValue = System.getenv(envKey);
+                        if (envValue != null) {
+                            value = envValue;
+                        }
                     }
                     initParams.put(key, value);
                 });
