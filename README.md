@@ -74,7 +74,7 @@ Maven
 引入依赖：
 
 ```groovy
-compile 'net.nextabc:autowired:1.1.2'
+compile 'net.nextabc:autowired:1.1.3'
 ```
 
 Maven
@@ -82,7 +82,7 @@ Maven
 <dependency>
   <groupId>net.nextabc</groupId>
   <artifactId>autowired</artifactId>
-  <version>1.1.2</version>
+  <version>1.1.3</version>
   <type>pom</type>
 </dependency>
 ```
@@ -102,7 +102,7 @@ Maven
           preload="true"
     >
         <init-params>
-            <param key="path">/home/yoojia/JavaProjects/Autowired/build.gradle</param>
+            <param key="path" envKey="YOUR_ENV_KEY">/home/yoojia/JavaProjects/Autowired/build.gradle</param>
         </init-params>
     </bean>
 </autowired>
@@ -151,6 +151,15 @@ Autowired在调用getBean来获取Bean对象时,内部基于`beanId`来获取.
 - `factofy` 创建Bean的Factory工厂类。class与factory两项配置至少指定一项目；优先使用factory创建Bean对象；
 - `preload` 默认情况为false，即每个Bean都是Lazy Load,即当第一次调用时才会创建，并留驻内存；如果为true则在Autowired初始化时自动创建Bean对象.
 
+#### Bean的初始化参数
+
+在每个Bean配置下均存在一个 `init-params/param` 节点,用来指定Bean的初始化参数. 当Bean被初始化时,会读取这些参数,并生成Map<String, String>对象传递到Bean的构造函数.
+
+其中,`param`包含两个属性:
+
+1. `key` 即参数名；传递到Map对象的参数名称；
+2. `envKey` 环境变量名称: 如果配置了此属性, 会尝试读取envKey指定环境变量的值,来`替代(replace)`param所指定的值；
+
 #### class/factory的说明
 
 `class`和`factory`都是创建Bean对象的关键类，两个参数不能同时为空。
@@ -178,9 +187,10 @@ Autowired在调用getBean来获取Bean对象时,内部基于`beanId`来获取.
 
 按以下顺序搜索`autowired.xml`文件:
 
-1. `System.getProperty("autowired.configPath")` 指定的文件地址；
-1. `System.getProperty("user.dir")` 目录下的配置文件；
-1. `classpath:autowired.xml` Classpath路径下的配置文件；
+1. `System.getenv("autowired.configPath")` 从系统环境变量中读取配置文件地址；
+1. `System.getProperty("autowired.configPath")` 从JVM的Properties中读取配置文件地址；
+1. `System.getProperty("user.dir")` 运行目录下查找；
+1. `classpath:autowired.xml` Classpath路径下查找；
 
 ## Q&A
 
