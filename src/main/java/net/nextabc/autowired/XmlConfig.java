@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.getProperty;
+import static java.lang.System.getenv;
 
 /**
  * XML配置文件工具类
@@ -29,10 +30,12 @@ class XmlConfig {
 
     XmlConfig() {
         // 加载配置文件的路径顺序:
+        // 1. System.getenv("autowired.configPath")
         // 1. System.getProperty("autowired.configPath")
         // 2. System.getProperty("user.dir")
         // 3. Classpath.resource
         final Resource res = Resource.from(
+                Resource.File(getenv("autowired.configPath")),
                 Resource.File(getProperty("autowired.configPath")),
                 Resource.File(Paths.get(getProperty("user.dir"), XML_CONFIG_NAME).toFile()),
                 Resource.Classpath(XML_CONFIG_NAME)
@@ -78,13 +81,16 @@ class XmlConfig {
             final Map<String, String> initParams = new HashMap<>(4);
             getXmlElementList(beanEle, "init-params").forEach(initParamEle -> {
                 getXmlElementList(initParamEle, "param").forEach(param -> {
-                    // 优先读取环境变量
+                    final String key = param.getAttribute("key");
+                    final String value;
+                    // 优先读取环境变量的值,来替换配置文件的值
                     final String envKey = param.getAttribute("envKey");
                     if (envKey != null && !envKey.isEmpty()) {
-                        initParams.put(envKey, System.getenv(envKey));
+                        value = System.getenv(envKey);
                     } else {
-                        initParams.put(param.getAttribute("key"), param.getTextContent());
+                        value = param.getTextContent();
                     }
+                    initParams.put(key, value);
                 });
             });
 
