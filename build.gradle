@@ -89,7 +89,7 @@ bintray {
     pkg {
         repo = 'maven'
         name = projectName
-        userOrg = 'yoojia'
+        userOrg = 'nextabc'
 
         licenses = ['Apache-2.0']
         vcsUrl = projectVCS
