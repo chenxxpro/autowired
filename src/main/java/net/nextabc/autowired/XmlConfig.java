@@ -30,13 +30,11 @@ class XmlConfig {
 
     XmlConfig() {
         // 加载配置文件的路径顺序:
-        // 1. System.getenv("autowired.configPath")
-        // 1. System.getProperty("autowired.configPath")
-        // 2. System.getProperty("user.dir")
-        // 3. Classpath.resource
+        // 1. System.getenv("Autowired.config")
+        // 2. System.getProperty("user.dir")/autowired.xml
+        // 3. Classpath.resource/autowired.xml
         final Resource res = Resource.from(
-                Resource.File(getenv("autowired.configPath")),
-                Resource.File(getProperty("autowired.configPath")),
+                Resource.File(getenv("Autowired.config")),
                 Resource.File(Paths.get(getProperty("user.dir"), XML_CONFIG_NAME).toFile()),
                 Resource.Classpath(XML_CONFIG_NAME)
         );

@@ -37,14 +37,14 @@ class AutoManager {
                     throw new IllegalArgumentException("Bean.id OR Bean.class MUST BE specified");
                 }
                 beanId = cfg.beanClass;
-                LOGGER.debug("Found <Bean>, USING CLASS NAME as id: " + beanId);
+                LOGGER.debug("Found <Bean>, using <CLASS NAME> as bean id: " + beanId);
             } else {
                 beanId = cfg.id;
-                LOGGER.debug("Found <Bean>, id: " + beanId);
+                LOGGER.debug("Found <Bean>, bean id: " + beanId);
             }
             // Identify或者Class类型不可重复
             if (REGISTER.containsKey(beanId)) {
-                throw new IllegalArgumentException("Duplicated id: " + beanId);
+                throw new IllegalArgumentException("Duplicated bean id: " + beanId);
             }
 
             final BeanFactory factory;
@@ -71,7 +71,7 @@ class AutoManager {
             // 可以通过Bean.preload = true来设置预加载。
             if (cfg.preload) {
                 field.loadValue();
-                LOGGER.debug("Preload <Bean>, id: " + beanId);
+                LOGGER.debug("Preload <Bean>, bean id: " + beanId);
             }
         });
     }
@@ -79,8 +79,8 @@ class AutoManager {
     static BeanField getField(String identify) {
         final BeanField beanField = REGISTER.get(identify);
         if (null == beanField) {
-            LOGGER.error("INVALID_IDENTIFY: " + identify);
-            throw new IllegalArgumentException("Identify IS NOT a bean item: " + identify);
+            LOGGER.error("INVALID_BEAN_ID[BEAN_NOT_FOUND]: " + identify);
+            throw new IllegalArgumentException("Id IS NOT a bean item: " + identify);
         }
         return beanField;
     }
