@@ -36,7 +36,7 @@ repositories {
 引入依赖：
 
 ```groovy
-compile 'net.nextabc:autowired:1.1.4'
+compile 'net.nextabc:autowired:1.1.6'
 ```
 
 Maven
@@ -44,7 +44,7 @@ Maven
 <dependency>
   <groupId>net.nextabc</groupId>
   <artifactId>autowired</artifactId>
-  <version>1.1.4</version>
+  <version>1.1.6</version>
   <type>pom</type>
 </dependency>
 ```
@@ -149,8 +149,7 @@ Autowired在调用getBean来获取Bean对象时,内部基于`beanId`来获取.
 
 按以下顺序搜索`autowired.xml`文件:
 
-1. `System.getenv("autowired.configPath")` 从系统环境变量中读取配置文件地址；
-1. `System.getProperty("autowired.configPath")` 从JVM的Properties中读取配置文件地址；
+1. `System.getenv("Autowired.config")` 从系统环境变量中读取配置文件地址；
 1. `System.getProperty("user.dir")` 运行目录下查找；
 1. `classpath:autowired.xml` Classpath路径下查找；
 

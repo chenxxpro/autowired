@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 资源文件读取工具类
@@ -40,6 +41,15 @@ public class Resource {
             }
         }
         return null;
+    }
+
+    public <T> T getOrNullAs(Function<InputStream, T> fun) {
+        final InputStream is = getOrNull();
+        if (is != null) {
+            return fun.apply(is);
+        } else {
+            return null;
+        }
     }
 
     public static Resource from(Provider... providers) {
