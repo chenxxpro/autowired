@@ -11,19 +11,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author 陈哈哈 (yoojiachen@gmail.com)
- * @version 1.0.0
+ * @version 1.2.0
  */
-class AutoManager {
+class Registry {
 
-    private static final Logger LOGGER = Logger.getLogger(AutoManager.class);
+    private static final Logger LOGGER = Logger.getLogger(Registry.class);
 
-    private static final Map<String, BeanField> REGISTER = new HashMap<>();
+    private static final Map<String, Meta> REGISTER = new HashMap<>();
     private static final AtomicBoolean INITED = new AtomicBoolean(false);
 
-    private AutoManager() {
+    private Registry() {
     }
 
-    static void initialize() {
+    static void create() {
         if (INITED.getAndSet(true)) {
             return;
         }
@@ -61,7 +61,7 @@ class AutoManager {
                 throw new RuntimeException("Load/Instance factory class:" + cfg.factoryClass, e);
             }
 
-            final BeanField field = new BeanField(
+            final Meta field = new Meta(
                     beanId,
                     cfg.beanClass.isEmpty() ? null : Clazz.loadClass(cfg.beanClass),
                     cfg.initParams,
@@ -76,13 +76,13 @@ class AutoManager {
         });
     }
 
-    static BeanField getField(String identify) {
-        final BeanField beanField = REGISTER.get(identify);
-        if (null == beanField) {
+    static Meta getField(String identify) {
+        final Meta meta = REGISTER.get(identify);
+        if (null == meta) {
             LOGGER.error("INVALID_BEAN_ID[BEAN_NOT_FOUND]: " + identify);
             throw new IllegalArgumentException("Id IS NOT a bean item: " + identify);
         }
-        return beanField;
+        return meta;
     }
 
     static void release() {

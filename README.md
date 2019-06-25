@@ -98,7 +98,7 @@ Autowired提供了两个创建方法函数:
 1. `Autowired.id(String)` 明确指定id,创建与xml配置bean.id一致的Bean绑定；
 1. `Autowired.type(Class)` 以Class.name作为id；
 
-Autowired在调用getBean来获取Bean对象时,内部基于`beanId`来获取.
+Autowired在调用getBean来获取Bean对象时,内部基于`id`来获取.
  
 通常情况,每个Class类型创建一个Bean对象,并建议使用id属性作为beanId. Autowired优先使用为xml配置的bean.id属性；如果没有设置,则使用class类型名称作为beanId.
 

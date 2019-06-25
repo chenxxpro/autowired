@@ -7,50 +7,50 @@ package net.nextabc.autowired;
 public final class Autowired<T> {
 
     static {
-        AutoManager.initialize();
-        Runtime.getRuntime().addShutdownHook(new Thread(AutoManager::release));
+        Registry.create();
+        Runtime.getRuntime().addShutdownHook(new Thread(Registry::release));
     }
 
-    private final String beanId;
+    private final String id;
 
-    private Autowired(String beanId) {
-        this.beanId = beanId;
+    private Autowired(String id) {
+        this.id = id;
     }
 
     /**
-     * 返回Identify值。
-     *
-     * @return Identify
+     * @see Autowired#id()
      */
+    @Deprecated
     public String getBeanId() {
-        return beanId;
+        return id();
     }
 
     /**
-     * @see Autowired#getBean()
+     * 返回Id值。
+     *
+     * @return Bean Id
+     */
+    public String id() {
+        return id;
+    }
+
+    /**
+     * @see Autowired#bean()
      */
     @SuppressWarnings("unchecked")
     @Deprecated
-    public <T0> T0 get() {
-        return (T0) getBean();
+    public T getBean() {
+        return bean();
     }
 
     /**
-     * 获取Autowired管理的Bean对象。
+     * 获取管理的Bean对象。
      *
      * @return Bean对象
      */
     @SuppressWarnings("unchecked")
-    public T getBean() {
-        return (T) AutoManager.getField(this.beanId).loadValue();
-    }
-
-    /**
-     * @see Autowired#beanId
-     */
-    @Deprecated()
-    public static <T> Autowired<T> identify(String identify) {
-        return id(identify);
+    public T bean() {
+        return (T) Registry.getField(this.id).loadValue();
     }
 
     /**
@@ -63,13 +63,21 @@ public final class Autowired<T> {
     }
 
     /**
+     * @see Autowired#typeOf(Class)
+     */
+    @Deprecated
+    public static <T> Autowired<T> typeOf(Class<T> type) {
+        return id(type.getName());
+    }
+
+    /**
      * 基于类型名称创建Autowired对象
      *
      * @param type 类型Class
      * @param <T>  类型
      * @return Autowired
      */
-    public static <T> Autowired<T> typeOf(Class<T> type) {
+    public static <T> Autowired<T> type(Class<T> type) {
         return id(type.getName());
     }
 }

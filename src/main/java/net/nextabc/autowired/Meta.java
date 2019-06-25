@@ -6,7 +6,7 @@ import java.util.Map;
  * @author 陈哈哈 (yoojiachen@gmail.com)
  * @version 1.0.2
  */
-class BeanField {
+class Meta {
 
     private final String identify;
     private final Class<?> nullableBeanType;
@@ -14,7 +14,7 @@ class BeanField {
     private final BeanFactory factory;
     private final LazySupplier<Object> supplier;
 
-    BeanField(String identify, Class<?> nullableBeanType, Map<String, String> nonnullInitParams, BeanFactory factory) {
+    Meta(String identify, Class<?> nullableBeanType, Map<String, String> nonnullInitParams, BeanFactory factory) {
         this.identify = identify;
         this.nullableBeanType = nullableBeanType;
         this.initParams = nonnullInitParams;
