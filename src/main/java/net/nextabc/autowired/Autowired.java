@@ -18,29 +18,12 @@ public final class Autowired<T> {
     }
 
     /**
-     * @see Autowired#id()
-     */
-    @Deprecated
-    public String getBeanId() {
-        return id();
-    }
-
-    /**
      * 返回Id值。
      *
      * @return Bean Id
      */
     public String id() {
         return id;
-    }
-
-    /**
-     * @see Autowired#bean()
-     */
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    public T getBean() {
-        return bean();
     }
 
     /**
@@ -60,14 +43,6 @@ public final class Autowired<T> {
      */
     public static <T> Autowired<T> id(String identify) {
         return new Autowired<>(identify);
-    }
-
-    /**
-     * @see Autowired#typeOf(Class)
-     */
-    @Deprecated
-    public static <T> Autowired<T> typeOf(Class<T> type) {
-        return id(type.getName());
     }
 
     /**
