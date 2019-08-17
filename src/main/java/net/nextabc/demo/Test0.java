@@ -13,7 +13,7 @@ public class Test0 {
     private final Autowired<File> file = Autowired.id("BUILD.GRADLE");
 
     public void test() {
-        File f = file.getBean();
+        File f = file.bean();
         System.out.println(f.getAbsolutePath());
     }
 

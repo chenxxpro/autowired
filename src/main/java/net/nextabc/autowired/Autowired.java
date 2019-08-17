@@ -38,7 +38,8 @@ public final class Autowired<T> {
 
     /**
      * 基于Id创建Autowired对象.
-     *
+     * @param identify ID
+     * @param <T> Bean Type
      * @return Autowired
      */
     public static <T> Autowired<T> id(String identify) {
@@ -49,7 +50,7 @@ public final class Autowired<T> {
      * 基于类型名称创建Autowired对象
      *
      * @param type 类型Class
-     * @param <T>  类型
+     * @param <T> Bean Type
      * @return Autowired
      */
     public static <T> Autowired<T> type(Class<T> type) {
